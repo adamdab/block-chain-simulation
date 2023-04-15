@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.nio.charset.StandardCharsets;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,7 +15,7 @@ import org.pw.simulation.entity.Transaction;
 
 class MinerTest {
   @Test
-  void shouldCorrectlyCreateHash() {
+  void shouldCorrectlyCreateHashTest() {
     int prefix = 4;
     String prefixString = new String(new char[prefix]).replace('\0', '0');
     Miner miner = new Miner(new ArrayList<>(), "INIT");
@@ -29,7 +26,7 @@ class MinerTest {
   }
 
   @Test
-  void shouldCorrectlyValidateTransaction() {
+  void shouldCorrectlyValidateTransactionTest() {
     Miner miner = new Miner(new ArrayList<>(), "INIT");
     Client client = new Client("Test Client", List.of());
     Long now = new Date().getTime();
