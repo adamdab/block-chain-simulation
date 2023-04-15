@@ -1,7 +1,5 @@
 package org.pw.simulation.entity;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;

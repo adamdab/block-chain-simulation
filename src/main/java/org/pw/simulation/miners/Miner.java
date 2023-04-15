@@ -2,10 +2,14 @@ package org.pw.simulation.miners;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.List;
+import javax.crypto.Cipher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.pw.simulation.entity.Block;
+import org.pw.simulation.entity.Transaction;
 
 @AllArgsConstructor
 @Getter
@@ -50,5 +54,18 @@ public class Miner {
         .build();
     prevHash = hash;
     return block;
+  }
+
+  public boolean validate(Transaction transaction, PublicKey publicKey) {
+    if(transaction.getSignature() == null) return false;
+    try {
+      Cipher cipher = Cipher.getInstance("RSA");
+      cipher.init(Cipher.DECRYPT_MODE, publicKey);
+      byte[] message = cipher.doFinal(transaction.getSignature());
+      return transaction.getTimestamp().toString().equals(Arrays.toString(message));
+    } catch (Exception e) {
+      System.out.println("[FATAL ERROR] Couldn't validate transaction");
+      throw new RuntimeException(e);
+    }
   }
 }

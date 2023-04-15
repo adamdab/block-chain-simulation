@@ -1,12 +1,20 @@
 package org.pw.simulation.miners;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.pw.simulation.clients.Client;
 import org.pw.simulation.entity.Block;
+import org.pw.simulation.entity.Transaction;
 
 class MinerTest {
   @Test
@@ -18,6 +26,18 @@ class MinerTest {
     System.out.println(block);
     assertEquals(prefixString, block.getHash().substring(0, prefix));
     assertEquals(block.getHash(), miner.getPrevHash());
+  }
+
+  @Test
+  void shouldCorrectlyValidateTransaction() {
+    Miner miner = new Miner(new ArrayList<>(), "INIT");
+    Client client = new Client("Test Client", List.of());
+    Long now = new Date().getTime();
+    Transaction transaction = Transaction.builder()
+        .timestamp(now)
+        .signature(client.sign(now.toString().getBytes(StandardCharsets.UTF_8)))
+        .build();
+    assertFalse(miner.validate(transaction, client.getPublicKey()));
   }
 
 

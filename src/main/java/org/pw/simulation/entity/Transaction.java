@@ -7,11 +7,13 @@ import lombok.Getter;
 @Builder
 @Getter
 public class Transaction {
+  private TransactionType type;
   private String from;
   private String to;
   private Long timestamp;
   private int amount;
-  private String signature;
+
+  private byte[] signature;
 
   @Override
   public String toString() {
