@@ -1,5 +1,8 @@
 package org.pw.simulation.cui;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 public class Display {
 
   public void showTitle() {
@@ -14,8 +17,14 @@ public class Display {
   }
 
   public void showInSameLine(String message, int counter) {
-    for(int i=0;i< counter;i++) {
-      System.out.println(message+"..."+i+"\r");
+    char[] animationChars = new char[]{'|', '/', '-', '\\'};
+    for (int x =0 ; x <= counter ; x++) {
+      System.out.print(message + "..." + x + "% " + animationChars[x % 4] + "\r");
+      try {
+        Thread.sleep(10);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 
