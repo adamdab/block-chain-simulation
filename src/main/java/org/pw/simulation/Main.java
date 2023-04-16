@@ -1,12 +1,11 @@
 package org.pw.simulation;
 
-import org.pw.simulation.cui.Display;
+import org.pw.simulation.cui.Console;
 
 public class Main {
 
-  private static final Display display = new Display();
   public static void main(String[] args) {
-    display.showTitle();
-    display.showInSameLine("loading environment",100);
+    Console.showTitle();
+    Console.showInSameLine("Loading",100);
   }
 }

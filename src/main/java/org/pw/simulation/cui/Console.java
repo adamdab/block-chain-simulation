@@ -1,11 +1,16 @@
 package org.pw.simulation.cui;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
-public class Display {
+public final class Console {
 
-  public void showTitle() {
+  private final Scanner scanner;
+
+  public Console() {
+    scanner =  new Scanner(System.in);
+  }
+
+  public static void showTitle() {
     System.out.println(
         """
                ___   __           __         __         _              _              __       __           \s
@@ -16,7 +21,7 @@ public class Display {
     );
   }
 
-  public void showInSameLine(String message, int counter) {
+  public static void showInSameLine(String message, int counter) {
     char[] animationChars = new char[]{'|', '/', '-', '\\'};
     for (int x =0 ; x <= counter ; x++) {
       System.out.print(message + "..." + x + "% " + animationChars[x % 4] + "\r");
@@ -28,4 +33,17 @@ public class Display {
     }
   }
 
+  public String scan() {
+    return scanner.next();
+  }
+
+  public String askForInput(String message) {
+    System.out.print(message);
+    return scanner.next();
+  }
+
+
+  public static void printAs(String person, String message) {
+    System.out.println(person+"> "+message);
+  }
 }

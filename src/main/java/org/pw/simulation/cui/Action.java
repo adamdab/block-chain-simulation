@@ -1,9 +1,13 @@
 package org.pw.simulation.cui;
 
-public enum Action {
-  QUIT,
-  HELP,
-  CREATE_TRANSACTION,
-  VALIDATE_TRANSACTION,
-  VALIDATE_BLOCK
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@AllArgsConstructor
+public class Action {
+  public ActionType action;
+  public List<String> args;
 }
