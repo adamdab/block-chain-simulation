@@ -1,11 +1,11 @@
 package org.pw.simulation;
 
-import org.pw.simulation.cui.Console;
+import org.pw.simulation.cui.Environment;
+
 
 public class Main {
-
+  private static final Environment environment = new Environment();
   public static void main(String[] args) {
-    Console.showTitle();
-    Console.showInSameLine("Loading",100);
+    environment.run();
   }
 }

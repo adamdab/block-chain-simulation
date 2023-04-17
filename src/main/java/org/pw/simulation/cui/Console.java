@@ -21,29 +21,20 @@ public final class Console {
     );
   }
 
-  public static void showInSameLine(String message, int counter) {
-    char[] animationChars = new char[]{'|', '/', '-', '\\'};
-    for (int x =0 ; x <= counter ; x++) {
-      System.out.print(message + "..." + x + "% " + animationChars[x % 4] + "\r");
-      try {
-        Thread.sleep(10);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
+  public static void print(String message) {
+      System.out.print(message + "\r");
   }
+
+  public static void printLine(String message) {
+    System.out.println(message);
+  }
+
 
   public String scan() {
     return scanner.next();
   }
-
   public String askForInput(String message) {
     System.out.print(message);
-    return scanner.next();
-  }
-
-
-  public static void printAs(String person, String message) {
-    System.out.println(person+"> "+message);
+    return scanner.nextLine();
   }
 }

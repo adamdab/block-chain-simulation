@@ -6,19 +6,43 @@ import java.util.List;
 public class Parser {
 
   public Action parse(String input) {
-    if(input.isEmpty() || input.charAt(0)!='/') return new Action(ActionType.UNKNOWN_COMMAND, List.of(input));
+    if(input.isEmpty() || input.charAt(0)!='/') return new Action(ActionType.UNKNOWN_COMMAND, null ,List.of(input));
     List<String> request = Arrays.stream(input.split("\\s")).toList();
+    return getAction(request);
+  }
+
+  private Action getAction(List<String> request) {
+    if(request.size() > 2 && request.get(1).charAt(0)!='-') return new Action(ActionType.UNKNOWN_COMMAND, ActionSubType.BAD_REQUEST, request);
     String action = request.get(0);
-    List<String> args = request.subList(1, request.size());
     ActionType actionType = getActionTypeFromString(action);
-    return new Action(actionType, args);
+    if(request.size() > 1) {
+      String subAction = request.get(1);
+      List<String> args = request.subList(2, request.size());
+      ActionSubType subType = getSubType(subAction);
+      return new Action(actionType, subType, args);
+    }
+    return new Action(actionType, ActionSubType.BAD_REQUEST, List.of());
+  }
+
+  private ActionSubType getSubType(String subAction) {
+    return switch (subAction) {
+      case "--create", "-c" -> ActionSubType.CREATE;
+      case "--list", "-ls" -> ActionSubType.LIST_SHORT;
+      case "--list-all", "-la" -> ActionSubType.LIST_LONG;
+      case "--details", "-d" -> ActionSubType.DETAILS;
+      case "--validate", "-v" -> ActionSubType.VALIDATE;
+      case "--create-invalid", "-ci" -> ActionSubType.CREATE_INVALID;
+      default -> ActionSubType.BAD_REQUEST;
+    };
   }
 
   private ActionType getActionTypeFromString(String action) {
     action = action.substring(1);
     return switch (action) {
-      case "q", "quit" -> ActionType.QUIT;
+      case "quit", "q" -> ActionType.QUIT;
       case "help", "h" -> ActionType.HELP;
+      case "block", "b" -> ActionType.BLOCK_ACTION;
+      case "transaction", "t" -> ActionType.TRANSACTION_ACTION;
       default -> ActionType.UNKNOWN_COMMAND;
     };
   }
