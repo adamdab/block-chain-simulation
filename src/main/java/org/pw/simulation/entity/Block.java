@@ -9,12 +9,17 @@ import lombok.Getter;
 public class Block {
   private String hash;
   private String previousHash;
-  private String transactions;
+  private Transaction transaction;
   private long timeStamp;
   private int nonce;
   @Override
   public String toString() {
     return String.format("Block [%s]\n Hash: %s Nonce: %d \n PrevHash: %s\n",
         new Date(timeStamp).toString(), hash, nonce, previousHash);
+  }
+
+  public void invalidateNonce() {
+    // only for simulation purposes
+    nonce ++;
   }
 }

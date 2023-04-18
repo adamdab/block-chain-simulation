@@ -39,13 +39,8 @@ public class Client {
     return this.keyPair.get().getPublic();
   }
 
-  public Transaction createTransaction(String recipient, int amount) {
-    return Transaction.builder()
-        .from(name)
-        .to(recipient)
-        .amount(amount)
-        .timestamp(new Date().getTime())
-        .build();
+  public void addBlock(Block block) {
+    chain.add(block);
   }
 
   public byte[] sign(byte[] message) {

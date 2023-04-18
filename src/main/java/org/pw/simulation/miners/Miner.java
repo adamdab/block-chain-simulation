@@ -8,6 +8,7 @@ import java.util.List;
 import javax.crypto.Cipher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.pw.simulation.cui.Console;
 import org.pw.simulation.entity.Block;
 import org.pw.simulation.entity.Transaction;
 
@@ -37,18 +38,18 @@ public class Miner {
     return buffer.toString();
   }
 
-  public Block mineBlock(Long timeStamp, String transactions, int prefix) {
+  public Block mineBlock(Long timeStamp, Transaction transactions, int prefix) {
     int nonce = 0;
-    String hash = calculateHash(timeStamp, nonce, transactions);
+    String hash = calculateHash(timeStamp, nonce, transactions.toString());
     String prefixString = new String(new char[prefix]).replace('\0', '0');
     while (!hash.substring(0, prefix).equals(prefixString)) {
       nonce++;
-      hash = calculateHash(timeStamp, nonce, transactions);
+      hash = calculateHash(timeStamp, nonce, transactions.toString());
     }
     Block block = Block.builder()
         .hash(hash)
         .nonce(nonce)
-        .transactions(transactions)
+        .transaction(transactions)
         .timeStamp(timeStamp)
         .previousHash(prevHash)
         .build();
@@ -66,6 +67,18 @@ public class Miner {
     } catch (Exception e) {
       System.out.println("[FATAL ERROR] Couldn't validate transaction");
       throw new RuntimeException(e);
+    }
+  }
+
+  public boolean validateBlock(Block block) {
+    String hash = block.getHash();
+    String tempHash = calculateHash(block.getTimeStamp(), block.getNonce(),
+        block.getTransaction().toString());
+    if(hash.equals(tempHash)) return true;
+    else {
+      Console.printLine("[WARN] Hash is not calculated correctly : ");
+      Console.printLine("{nonce : " + block.getNonce() + ", hash : " + hash + "}");
+      return false;
     }
   }
 }

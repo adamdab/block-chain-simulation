@@ -19,11 +19,16 @@ class MinerTest {
   void shouldCorrectlyCreateHashTest() {
     int prefix = 4;
     String prefixString = new String(new char[prefix]).replace('\0', '0');
+    Long now = new Date().getTime();
+    Transaction transaction = Transaction.builder()
+        .timestamp(now)
+        .build();
     Miner miner = new Miner(new ArrayList<>(), "INIT");
-    Block block = miner.mineBlock(new Date().getTime(),"Trnasaction #1", prefix);
+    Block block = miner.mineBlock(new Date().getTime(), transaction, prefix);
     System.out.println(block);
     assertEquals(prefixString, block.getHash().substring(0, prefix));
     assertEquals(block.getHash(), miner.getPrevHash());
+    assertTrue(miner.validateBlock(block));
   }
 
   @Test

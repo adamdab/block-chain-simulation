@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.pw.simulation.clients.Client;
+import org.pw.simulation.entity.Block;
 import org.pw.simulation.entity.Transaction;
 import org.pw.simulation.entity.TransactionType;
 import org.pw.simulation.miners.Miner;
@@ -22,7 +23,7 @@ public class Environment {
   public Environment() {
     Console.showTitle();
     Console.beginning();
-    miner = new Miner(List.of(), "INIT");
+    miner = new Miner(new ArrayList<>(), "INIT");
     console = new Console();
     parser = new Parser();
     allTransactions = new ArrayList<>();
@@ -166,14 +167,44 @@ public class Environment {
   }
 
   private void createInvalidBlock(Action action) {
-    
-  }
-
-  private void validateBlock(Action action) {
+    mineBlock(action,true);
   }
 
   private void createBlock(Action action) {
+    mineBlock(action, false);
   }
+
+  private void validateBlock(Action action) {
+
+  }
+
+  private void mineBlock(Action action, boolean invalidate) {
+    try {
+      int index = Integer.parseInt(action.getArgs().get(0));
+      Transaction transaction = allTransactions.get(index);
+      Console.printLine("[INFO] Validating transaction...");
+      simulateLatency("Broadcasting",5L,120);
+      boolean isValid = miner.validate(transaction, client.getPublicKey());
+      if(!isValid) {
+        Console.printLine("[ERROR] Transaction is INVALID");
+        return;
+      } else Console.printLine("[INFO] Transaction is VALID");
+      Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
+      if(invalidate) block.invalidateNonce();
+      Console.printLine("[INFO] Validating block...");
+      if(miner.validateBlock(block)) {
+        Console.printLine("[INFO] Block : " + block.toString() + "is VALID");
+        simulateLatency("Adding block",5L,80);
+        client.addBlock(block);
+      } else {
+        Console.printLine("[WARN] Block is INVALID");
+      }
+
+    } catch (Exception e) {
+      Console.printLine("Incorrect arguments, use [transaction_index]");
+    }
+  }
+
 
   private void getShortListOfBlocks(Action action) {
 
@@ -228,11 +259,11 @@ public class Environment {
               BLOCK : /block or /b
             FLAGS :
              --create or -c 
-              PARAMETERS : [some parameters]
+              PARAMETERS : [transaction_index]
               DESC : create valid block and add it to the blockchain
               
              --create-invalid or -ci
-              PARAMETERS : [some parameters]
+              PARAMETERS : [transaction_index]
               DESC: create invalid block and add tries to add it to the blockchain
              
              --list or -ls
