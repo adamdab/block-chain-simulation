@@ -52,8 +52,7 @@ public class Client {
     try {
       Cipher cipher = Cipher.getInstance("RSA");
       cipher.init(Cipher.ENCRYPT_MODE, this.keyPair.get().getPrivate());
-      byte[] encryptedMessageHash = cipher.doFinal(message);
-      return encryptedMessageHash;
+      return cipher.doFinal(message);
     } catch (Exception e) {
       if( e instanceof NoSuchAlgorithmException) {
         System.out.println("[FATAL ERROR] Can not create RSA cipher");

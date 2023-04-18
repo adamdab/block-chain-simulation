@@ -1,7 +1,12 @@
 package org.pw.simulation.cui;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.pw.simulation.clients.Client;
+import org.pw.simulation.entity.Transaction;
+import org.pw.simulation.entity.TransactionType;
 import org.pw.simulation.miners.Miner;
 
 public class Environment {
@@ -10,14 +15,17 @@ public class Environment {
   private final Miner miner;
   private final Console console;
   private final Parser parser;
+  private final List<Transaction> allTransactions;
   private boolean quit;
 
 
   public Environment() {
     Console.showTitle();
+    Console.beginning();
     miner = new Miner(List.of(), "INIT");
     console = new Console();
     parser = new Parser();
+    allTransactions = new ArrayList<>();
     String username = console.askForInput("Username: ");
     client = new Client(username, List.of());
     quit = false;
@@ -54,6 +62,23 @@ public class Environment {
 }
 
   private void createInvalidTransaction(Action action) {
+    List<String> args = action.getArgs();
+    if(args.size()!=2) {
+      Console.printLine("Incorrect arguments, use : [to amount]");
+      return;
+    }
+    Long timestamp = new Date().getTime();
+    int amount = Integer.parseInt(args.get(1));
+    Transaction transaction = Transaction.builder()
+        .from(client.getName())
+        .to(args.get(0))
+        .timestamp(timestamp)
+        .type(TransactionType.USER_TRANSACTION)
+        .amount(amount)
+        .signature(client.sign((new Date(123123123L)).toString().getBytes(StandardCharsets.UTF_8)))
+        .build();
+    allTransactions.add(transaction);
+    Console.printLine("[INFO] Transaction created successfully : " + transaction.toString());
   }
 
   private void validateTransaction(Action action) {

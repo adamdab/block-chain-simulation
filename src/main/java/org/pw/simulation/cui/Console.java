@@ -21,6 +21,21 @@ public final class Console {
     );
   }
 
+  public static void beginning() {
+                      ///____//_/ \___/\__//_/\_\ \__//_//_/\_,_//_//_//_/ /___//_//_/_/_/\_,_//_/ \_,_/ \__/ \___//_/
+    System.out.println("#################################################################################################");
+    System.out.println("#                               Blockchain simulation project                                   #");
+    System.out.println("#                              Warsaw University of Technology                                  #");
+    System.out.println("#                        Faculty of Mathematics and Information Sciences                        #");
+    System.out.println("#                            Project from the subject cyber-security                            #");
+    System.out.println("#################################################################################################");
+    System.out.println();
+    System.out.println();
+    System.out.println("-------------------------------------type /q or /quit to exit-------------------------------------");
+    System.out.println();
+    System.out.println();
+  }
+
   public static void print(String message) {
       System.out.print(message + "\r");
   }
