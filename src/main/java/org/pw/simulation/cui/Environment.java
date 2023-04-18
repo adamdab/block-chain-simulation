@@ -88,12 +88,44 @@ public class Environment {
   }
 
   private void getShortListOfTransactions(Action action) {
-
+    if(action.getArgs().size() == 0) {
+      for(int i = 0; i<allTransactions.size(); i++) {
+        Console.printLine(i + ". " + allTransactions.get(i).getTo() + " : " + allTransactions.get(i).getAmount());
+      }
+    }
+    else {
+      try {
+        int index = Integer.parseInt(action.getArgs().get(0));
+        Transaction transaction = allTransactions.get(index);
+        Console.printLine(index+". " + client.getName() + " pays "+ transaction.getAmount() + " euro-sponges to "+ transaction.getTo());
+      } catch (Exception e) {
+        Console.printLine("Incorrect arguments, use [] or [index]");
+      }
+    }
   }
 
   private void getLongListOfTransactions(Action action) {
-
+    if (action.getArgs().size() == 0) {
+      for (int i = 0; i < allTransactions.size(); i++) {
+        Console.printLine(i + ". " + getLongDescription(allTransactions.get(i)));
+      }
+    } else {
+      try {
+        int index = Integer.parseInt(action.getArgs().get(0));
+        Transaction transaction = allTransactions.get(index);
+        Console.printLine(getLongDescription(transaction));
+      } catch (Exception e) {
+        Console.printLine("Incorrect arguments, use [] or [index]");
+      }
+    }
   }
+
+  private  String getLongDescription(Transaction transaction) {
+    return "{\nfrom: " + transaction.getFrom() + ",\nto: " + transaction.getTo() + ",\namount: "
+        + transaction.getAmount() + " euro-sponges,\ntimestamp: " + transaction.getTimestamp()
+        + ",\nsignature: " + new String(transaction.getSignature(), StandardCharsets.UTF_8) + "\n}";
+  }
+
 
   private void getDetailsOfTransaction(Action action) {
 
