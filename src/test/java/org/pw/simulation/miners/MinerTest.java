@@ -2,6 +2,7 @@ package org.pw.simulation.miners;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -34,8 +35,19 @@ class MinerTest {
         .timestamp(now)
         .signature(client.sign(now.toString().getBytes(StandardCharsets.UTF_8)))
         .build();
-    assertFalse(miner.validate(transaction, client.getPublicKey()));
+    assertTrue(miner.validate(transaction, client.getPublicKey()));
   }
 
+  @Test
+  void shouldCorrectlyValidateInvalidTransactionTest() {
+    Miner miner = new Miner(new ArrayList<>(), "INIT");
+    Client client = new Client("Test Client", List.of());
+    Long now = new Date().getTime();
+    Transaction transaction = Transaction.builder()
+        .timestamp(now)
+        .signature(client.sign((new Date(123123123L)).toString().getBytes(StandardCharsets.UTF_8)))
+        .build();
+    assertFalse(miner.validate(transaction, client.getPublicKey()));
+  }
 
 }

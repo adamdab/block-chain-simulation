@@ -62,7 +62,7 @@ public class Miner {
       Cipher cipher = Cipher.getInstance("RSA");
       cipher.init(Cipher.DECRYPT_MODE, publicKey);
       byte[] message = cipher.doFinal(transaction.getSignature());
-      return transaction.getTimestamp().toString().equals(Arrays.toString(message));
+      return Arrays.equals(message, transaction.getTimestamp().toString().getBytes(StandardCharsets.UTF_8));
     } catch (Exception e) {
       System.out.println("[FATAL ERROR] Couldn't validate transaction");
       throw new RuntimeException(e);

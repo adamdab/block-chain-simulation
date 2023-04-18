@@ -77,13 +77,40 @@ public class Environment {
         .signature(client.sign((new Date(123123123L)).toString().getBytes(StandardCharsets.UTF_8)))
         .build();
     allTransactions.add(transaction);
-    Console.printLine("[INFO] Transaction created successfully : " + transaction.toString());
+    Console.printLine("[INFO] Invalid transaction created successfully : " + transaction.toString());
   }
 
   private void validateTransaction(Action action) {
+    List<String> args = action.getArgs();
+    try {
+      int index = Integer.parseInt(args.get(0));
+      Transaction transaction = allTransactions.get(index);
+      simulateLatency("Broadcasting",5L,120);
+      String validation = miner.validate(transaction, client.getPublicKey())? " is VALID" : " is INVALID";
+      Console.printLine("[INFO] Transaction : " + transaction.toString() + validation);
+    } catch (Exception e) {
+      Console.printLine("Incorrect arguments, use : [index]");
+    }
   }
 
   private void createTransaction(Action action) {
+    List<String> args = action.getArgs();
+    if(args.size()!=2) {
+      Console.printLine("Incorrect arguments, use : [to amount]");
+      return;
+    }
+    Long timestamp = new Date().getTime();
+    int amount = Integer.parseInt(args.get(1));
+    Transaction transaction = Transaction.builder()
+        .from(client.getName())
+        .to(args.get(0))
+        .timestamp(timestamp)
+        .type(TransactionType.USER_TRANSACTION)
+        .amount(amount)
+        .signature(client.sign(timestamp.toString().getBytes(StandardCharsets.UTF_8)))
+        .build();
+    allTransactions.add(transaction);
+    Console.printLine("[INFO] Valid transaction created successfully : " + transaction.toString());
   }
 
   private void getShortListOfTransactions(Action action) {
@@ -158,11 +185,11 @@ public class Environment {
 
 
   private void unknownCommand(Action action) {
-    Console.printLine("###################################");
-    Console.printLine("# An unknown command has occurred #");
-    Console.printLine("# Please use /h or /help to see   #");
-    Console.printLine("# available commands              #");
-    Console.printLine("###################################");
+    Console.printLine("#---------------------------------#");
+    Console.printLine("| An unknown command has occurred |");
+    Console.printLine("| Please use /h or /help to see   |");
+    Console.printLine("| available commands              |");
+    Console.printLine("#---------------------------------#");
   }
 
   private void help() {
@@ -223,6 +250,18 @@ public class Environment {
               DESC : validates hash of block, this part is executing by
                      miners and clients before adding to blockchain
         """);
+  }
+
+  private void simulateLatency(String message, long latency, int counter) {
+    char[] animation = {'|', '/','-','\\'};
+    try {
+      for(int i = 0; i<counter; i++) {
+        Console.print(message+" ... " + animation[i%4]);
+        Thread.sleep(latency);
+      }
+    } catch (Exception ignored) {
+    }
+    Console.print("Done !\n");
   }
 
 }
