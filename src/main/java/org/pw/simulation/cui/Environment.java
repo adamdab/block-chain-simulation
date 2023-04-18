@@ -50,7 +50,6 @@ public class Environment {
 
   private void invokeTransactionAction(Action action) {
     switch (action.getSubType()) {
-      case DETAILS -> getDetailsOfTransaction(action);
       case LIST_LONG -> getLongListOfTransactions(action);
       case LIST_SHORT -> getShortListOfTransactions(action);
       case CREATE -> createTransaction(action);
@@ -127,13 +126,9 @@ public class Environment {
   }
 
 
-  private void getDetailsOfTransaction(Action action) {
-
-  }
 
   private void invokeBlockAction(Action action) {
     switch (action.getSubType()) {
-      case DETAILS -> getDetailsOfBlock(action);
       case LIST_LONG -> getLongListOfBlocks(action);
       case LIST_SHORT -> getShortListOfBlocks(action);
       case CREATE -> createBlock(action);
@@ -161,9 +156,6 @@ public class Environment {
 
   }
 
-  private void getDetailsOfBlock(Action action) {
-
-  }
 
   private void unknownCommand(Action action) {
     Console.printLine("###################################");
@@ -174,13 +166,63 @@ public class Environment {
   }
 
   private void help() {
-    Console.printLine("HELP:");
-    Console.printLine("[/quit /q] -> quit execution of program");
-    Console.printLine("[/help /h] -> see help page");
-    Console.printLine("[/block /b] [--create -c] [--list -ls] [--list-all -la] [-details -d] -> "
-        + "in block mode [-create block : params = ...] [-list shorten version] [-list long version] [-details]");
-    Console.printLine("[/transaction /t] [--create -c] [--list -ls] [--list-all -la] [-details -d] -> "
-        + "in transaction mode [-create block : params = ...] [-list shorten version] [-list long version] [-details]");
+    Console.printLine("""
+          HELP : /help or /h
+            DESC : returns list of commands that user can invoke
+            
+          QUIT : /quit or /q
+            DESC : closes the application
+          
+          TRANSACTION : /transaction or /t
+            FLAGS :
+             --create or -c
+              PARAMETERS : [to amount]
+              DESC : create valid transaction and add it to the transaction list
+              
+             --create-invalid or -ci
+              PARAMETERS : [to amount]
+              DESC: create invalid transaction and add it to the transaction list
+             
+             --list or -ls
+              PARAMETERS : [] or [index]
+              DESC : get short description of transaction that were created 
+                     if no index is specified it returns list of all transactions
+                     
+             --list-all or -la
+              PARAMETERS : [] or [index]
+              DESC : get long description of transaction that were created 
+                     if no index is specified it returns list of all transactions
+                     
+             --validate or -v
+              PARAMETERS : [index]
+              DESC : validates signature of transaction, 
+                     this part is executing by miner before mining process
+                     
+              BLOCK : /block or /b
+            FLAGS :
+             --create or -c 
+              PARAMETERS : [some parameters]
+              DESC : create valid block and add it to the blockchain
+              
+             --create-invalid or -ci
+              PARAMETERS : [some parameters]
+              DESC: create invalid block and add tries to add it to the blockchain
+             
+             --list or -ls
+              PARAMETERS : [] or [index]
+              DESC : get short description of block in blockchain 
+                     if no index is specified it returns list of all transactions
+                     
+             --list-all or -la
+              PARAMETERS : [] or [index]
+              DESC : get long description of block in blockchain  
+                     if no index is specified it returns list of all transactions
+                     
+             --validate or -v
+              PARAMETERS : [index]
+              DESC : validates hash of block, this part is executing by
+                     miners and clients before adding to blockchain
+        """);
   }
 
 }

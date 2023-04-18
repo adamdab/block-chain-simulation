@@ -29,7 +29,6 @@ public class Parser {
       case "--create", "-c" -> ActionSubType.CREATE;
       case "--list", "-ls" -> ActionSubType.LIST_SHORT;
       case "--list-all", "-la" -> ActionSubType.LIST_LONG;
-      case "--details", "-d" -> ActionSubType.DETAILS;
       case "--validate", "-v" -> ActionSubType.VALIDATE;
       case "--create-invalid", "-ci" -> ActionSubType.CREATE_INVALID;
       default -> ActionSubType.BAD_REQUEST;
