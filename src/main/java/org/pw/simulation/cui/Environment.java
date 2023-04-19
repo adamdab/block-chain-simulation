@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.pw.simulation.clients.Client;
+import org.pw.simulation.cui.console.Console;
 import org.pw.simulation.entity.Block;
 import org.pw.simulation.entity.Transaction;
 import org.pw.simulation.entity.TransactionType;
@@ -27,8 +28,8 @@ public class Environment {
     console = new Console();
     parser = new Parser();
     allTransactions = new ArrayList<>();
-    String username = console.askForInput("Username: ");
-    client = new Client(username, List.of());
+    String username = console.askForInput("Client's name (You) : ");
+    client = new Client(username, new ArrayList());
     quit = false;
   }
 
@@ -153,14 +154,11 @@ public class Environment {
         + ",\nsignature: " + new String(transaction.getSignature(), StandardCharsets.UTF_8) + "\n}";
   }
 
-
-
   private void invokeBlockAction(Action action) {
     switch (action.getSubType()) {
       case LIST_LONG -> getLongListOfBlocks(action);
       case LIST_SHORT -> getShortListOfBlocks(action);
       case CREATE -> createBlock(action);
-      case VALIDATE -> validateBlock(action);
       case CREATE_INVALID -> createInvalidBlock(action);
       case BAD_REQUEST -> unknownCommand(action);
     }
@@ -172,10 +170,6 @@ public class Environment {
 
   private void createBlock(Action action) {
     mineBlock(action, false);
-  }
-
-  private void validateBlock(Action action) {
-
   }
 
   private void mineBlock(Action action, boolean invalidate) {
@@ -207,11 +201,37 @@ public class Environment {
 
 
   private void getShortListOfBlocks(Action action) {
+    if(!action.getArgs().isEmpty()) {
+      try {
+       int index = Integer.parseInt(action.getArgs().get(0));
+       Block block = client.getChain().get(index);
+        Console.printLine(index + ". Transaction : " + block.getTransaction().toString() + ", mined at : " + block.getTimeStamp());
+      } catch (Exception e) {
+        Console.printLine("Incorrect arguments, use [block_index]");
+      }
+    } else {
+      for(int i=0;i<client.getChain().size(); i++) {
+        Block block = client.getChain().get(i);
+        Console.printLine(i + ". Transaction : " + block.getTransaction().toString() + ", mined at : " + block.getTimeStamp());
+      }
+    }
 
   }
 
   private void getLongListOfBlocks(Action action) {
-
+    if(action.getArgs().isEmpty()) {
+      try {
+        for(int i=0;i<client.getChain().size(); i++) {
+          Block block = client.getChain().get(i);
+          Console.printLine(
+              i + ". {Transaction : " + block.getTransaction().toString() + ",\nmined at : "
+                  + block.getTimeStamp() + ",\nnonce : " + block.getNonce() + ",\nprev hash : "
+                  + block.getPreviousHash() + "\nhash : " + block.getHash() + " }");
+        }
+      } catch (Exception e) {
+        Console.printLine("Incorrect arguments, use [block_index]");
+      }
+    }
   }
 
 
@@ -275,11 +295,6 @@ public class Environment {
               PARAMETERS : [] or [index]
               DESC : get long description of block in blockchain  
                      if no index is specified it returns list of all transactions
-                     
-             --validate or -v
-              PARAMETERS : [index]
-              DESC : validates hash of block, this part is executing by
-                     miners and clients before adding to blockchain
         """);
   }
 

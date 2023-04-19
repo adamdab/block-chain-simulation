@@ -8,7 +8,7 @@ import java.util.List;
 import javax.crypto.Cipher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.pw.simulation.cui.Console;
+import org.pw.simulation.cui.console.Console;
 import org.pw.simulation.entity.Block;
 import org.pw.simulation.entity.Transaction;
 
