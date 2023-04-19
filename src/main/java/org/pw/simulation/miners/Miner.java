@@ -29,7 +29,7 @@ public class Miner {
       digest = MessageDigest.getInstance("SHA-256");
       bytes = digest.digest(dataToHash.getBytes(StandardCharsets.UTF_8));
     } catch (Exception e) {
-      System.out.println("Error in hash calculation: " + e.getMessage());
+      Console.error("Error in hash calculation: " + e.getMessage());
     }
     StringBuffer buffer = new StringBuffer();
     for (byte b : bytes) {
@@ -65,7 +65,7 @@ public class Miner {
       byte[] message = cipher.doFinal(transaction.getSignature());
       return Arrays.equals(message, transaction.getTimestamp().toString().getBytes(StandardCharsets.UTF_8));
     } catch (Exception e) {
-      System.out.println("[FATAL ERROR] Couldn't validate transaction");
+      Console.fatalError("Couldn't validate transaction");
       throw new RuntimeException(e);
     }
   }
@@ -76,8 +76,9 @@ public class Miner {
         block.getTransaction().toString());
     if(hash.equals(tempHash)) return true;
     else {
-      Console.printLine("[WARN] Hash is not calculated correctly : ");
-      Console.printLine("{nonce : " + block.getNonce() + ", hash : " + hash + "}");
+      Console.warn("Hash is not calculated correctly : ");
+      Console.printLine("       { nonce : " + block.getNonce() + ",\n"
+          + "         hash : " + hash + "}");
       return false;
     }
   }

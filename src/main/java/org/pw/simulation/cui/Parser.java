@@ -44,7 +44,7 @@ public class Parser {
     action = action.substring(1);
     return switch (action) {
       case "quit", "q" -> ActionType.QUIT;
-      case "clear", "c" -> ActionType.CLEAR;
+      case "clear", "cls" -> ActionType.CLEAR;
       case "help", "h" -> ActionType.HELP;
       case "block", "b" -> ActionType.BLOCK_ACTION;
       case "transaction", "t" -> ActionType.TRANSACTION_ACTION;

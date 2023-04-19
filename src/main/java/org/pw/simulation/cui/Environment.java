@@ -68,7 +68,7 @@ public class Environment {
   private void createInvalidTransaction(Action action) {
     List<String> args = action.getArgs();
     if(args.size()!=2) {
-      Console.printLine("Incorrect arguments, use : [to amount]");
+      Console.error("Incorrect arguments, use : [to amount]");
       return;
     }
     Long timestamp = new Date().getTime();
@@ -82,7 +82,7 @@ public class Environment {
         .signature(client.sign((new Date(123123123L)).toString().getBytes(StandardCharsets.UTF_8)))
         .build();
     allTransactions.add(transaction);
-    Console.printLine("[INFO] Invalid transaction created successfully : " + transaction.toString());
+    Console.info("Invalid transaction created successfully : " + transaction.toString());
   }
 
   private void validateTransaction(Action action) {
@@ -92,16 +92,16 @@ public class Environment {
       Transaction transaction = allTransactions.get(index);
       simulateLatency("Broadcasting",5L,120);
       String validation = miner.validate(transaction, client.getPublicKey())? " is VALID" : " is INVALID";
-      Console.printLine("[INFO] Transaction : " + transaction.toString() + validation);
+      Console.info("Transaction : " + transaction.toString() + validation);
     } catch (Exception e) {
-      Console.printLine("Incorrect arguments, use : [index]");
+      Console.error("Incorrect arguments, use : [index]");
     }
   }
 
   private void createTransaction(Action action) {
     List<String> args = action.getArgs();
     if(args.size()!=2) {
-      Console.printLine("Incorrect arguments, use : [to amount]");
+      Console.error("Incorrect arguments, use : [to amount]");
       return;
     }
     Long timestamp = new Date().getTime();
@@ -115,7 +115,7 @@ public class Environment {
         .signature(client.sign(timestamp.toString().getBytes(StandardCharsets.UTF_8)))
         .build();
     allTransactions.add(transaction);
-    Console.printLine("[INFO] Valid transaction created successfully : " + transaction.toString());
+    Console.info("Valid transaction created successfully : " + transaction.toString());
   }
 
   private void getShortListOfTransactions(Action action) {
@@ -130,7 +130,7 @@ public class Environment {
         Transaction transaction = allTransactions.get(index);
         Console.printLine(index+". " + client.getName() + " pays "+ transaction.getAmount() + " euro-sponges to "+ transaction.getTo());
       } catch (Exception e) {
-        Console.printLine("Incorrect arguments, use [] or [index]");
+        Console.error("Incorrect arguments, use [] or [index]");
       }
     }
   }
@@ -146,7 +146,7 @@ public class Environment {
         Transaction transaction = allTransactions.get(index);
         Console.printLine(getLongDescription(transaction));
       } catch (Exception e) {
-        Console.printLine("Incorrect arguments, use [] or [index]");
+        Console.error("Incorrect arguments, use [] or [index]");
       }
     }
   }
@@ -179,26 +179,26 @@ public class Environment {
     try {
       int index = Integer.parseInt(action.getArgs().get(0));
       Transaction transaction = allTransactions.get(index);
-      Console.printLine("[INFO] Validating transaction...");
+      Console.info("Validating transaction...");
       simulateLatency("Broadcasting",5L,120);
       boolean isValid = miner.validate(transaction, client.getPublicKey());
       if(!isValid) {
-        Console.printLine("[ERROR] Transaction is INVALID");
+        Console.error("Transaction is INVALID");
         return;
-      } else Console.printLine("[INFO] Transaction is VALID");
+      } else Console.info("Transaction is VALID");
       Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
       if(invalidate) block.invalidateNonce();
-      Console.printLine("[INFO] Validating block...");
+      Console.info("Validating block...");
       if(miner.validateBlock(block)) {
-        Console.printLine("[INFO] Block : " + block.toString() + "is VALID");
+        Console.info("Block : " + block.toString() + "is VALID");
         simulateLatency("Adding block",5L,80);
         client.addBlock(block);
       } else {
-        Console.printLine("[WARN] Block is INVALID");
+        Console.warn("Block is INVALID");
       }
 
     } catch (Exception e) {
-      Console.printLine("Incorrect arguments, use [transaction_index]");
+      Console.error("Incorrect arguments, use [transaction_index]");
     }
   }
 
@@ -210,7 +210,7 @@ public class Environment {
        Block block = client.getChain().get(index);
         Console.printLine(index + ". Transaction : " + block.getTransaction().toString() + ", mined at : " + block.getTimeStamp());
       } catch (Exception e) {
-        Console.printLine("Incorrect arguments, use [block_index]");
+        Console.error("Incorrect arguments, use [block_index]");
       }
     } else {
       for(int i=0;i<client.getChain().size(); i++) {
@@ -240,7 +240,7 @@ public class Environment {
                   + block.getPreviousHash() + "\nhash : " + block.getHash() + " }");
         }
       }  catch (Exception e) {
-        Console.printLine("Incorrect arguments, use [block_index]");
+        Console.error("Incorrect arguments, use [block_index]");
     }
   }
 
@@ -261,7 +261,7 @@ public class Environment {
           QUIT : /quit or /q
             DESC : closes the application
             
-          CLEAR : /clear or /c
+          CLEAR : /clear or /cls
             DESC : clear the console
           
           TRANSACTION : /transaction or /t
