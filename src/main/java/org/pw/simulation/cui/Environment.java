@@ -271,23 +271,23 @@ public class Environment {
               DESC: create invalid transaction and add it to the transaction list
              
              --list or -ls
-              PARAMETERS : [] or [index]
-              DESC : get short description of transaction that were created 
+              PARAMETERS : [] or [transaction_index]
+              DESC : get short description of transaction that were created
                      if no index is specified it returns list of all transactions
                      
              --list-all or -la
-              PARAMETERS : [] or [index]
-              DESC : get long description of transaction that were created 
+              PARAMETERS : [] or [transaction_index]
+              DESC : get long description of transaction that were created
                      if no index is specified it returns list of all transactions
                      
              --validate or -v
-              PARAMETERS : [index]
-              DESC : validates signature of transaction, 
+              PARAMETERS : [transaction_index]
+              DESC : validates signature of transaction,
                      this part is executing by miner before mining process
                      
           BLOCK : /block or /b
             FLAGS :
-             --create or -c 
+             --create or -c
               PARAMETERS : [transaction_index]
               DESC : create valid block and add it to the blockchain
               
@@ -296,13 +296,13 @@ public class Environment {
               DESC: create invalid block and add tries to add it to the blockchain
              
              --list or -ls
-              PARAMETERS : [] or [index]
-              DESC : get short description of block in blockchain 
+              PARAMETERS : [] or [block_index]
+              DESC : get short description of block in blockchain
                      if no index is specified it returns list of all transactions
                      
              --list-all or -la
-              PARAMETERS : [] or [index]
-              DESC : get long description of block in blockchain  
+              PARAMETERS : [] or [block_index]
+              DESC : get long description of block in blockchain
                      if no index is specified it returns list of all transactions
         """);
   }
