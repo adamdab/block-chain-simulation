@@ -31,7 +31,7 @@ public final class Console {
     System.out.println("#################################################################################################");
     System.out.println();
     System.out.println();
-    System.out.println("-------------------------------------type /q or /quit to exit-------------------------------------");
+    System.out.println("-------------------------type /q or /quit to exit /h or /help fpr help---------------------------");
     System.out.println();
     System.out.println();
   }
