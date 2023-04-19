@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.pw.simulation.clients.Client;
+import org.pw.simulation.cui.actions.Action;
 import org.pw.simulation.cui.console.Console;
 import org.pw.simulation.entity.Block;
 import org.pw.simulation.entity.Transaction;
@@ -44,6 +45,7 @@ public class Environment {
     switch (action.getAction()) {
       case QUIT -> quit = true;
       case HELP -> help();
+      case WHITESPACE -> Console.print("");
       case UNKNOWN_COMMAND -> unknownCommand(action);
       case BLOCK_ACTION -> invokeBlockAction(action);
       case TRANSACTION_ACTION -> invokeTransactionAction(action);
@@ -276,7 +278,7 @@ public class Environment {
               DESC : validates signature of transaction, 
                      this part is executing by miner before mining process
                      
-              BLOCK : /block or /b
+          BLOCK : /block or /b
             FLAGS :
              --create or -c 
               PARAMETERS : [transaction_index]
@@ -307,7 +309,7 @@ public class Environment {
       }
     } catch (Exception ignored) {
     }
-    Console.print("Done !\n");
+    Console.print(message + " ... Done !\n");
   }
 
 }

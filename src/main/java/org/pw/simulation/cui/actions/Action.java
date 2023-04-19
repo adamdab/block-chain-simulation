@@ -1,4 +1,4 @@
-package org.pw.simulation.cui;
+package org.pw.simulation.cui.actions;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

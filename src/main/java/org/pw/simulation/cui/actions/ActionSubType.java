@@ -1,4 +1,4 @@
-package org.pw.simulation.cui;
+package org.pw.simulation.cui.actions;
 
 public enum ActionSubType {
   CREATE,

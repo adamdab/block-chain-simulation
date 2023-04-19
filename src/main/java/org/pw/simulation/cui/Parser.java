@@ -2,11 +2,15 @@ package org.pw.simulation.cui;
 
 import java.util.Arrays;
 import java.util.List;
+import org.pw.simulation.cui.actions.Action;
+import org.pw.simulation.cui.actions.ActionSubType;
+import org.pw.simulation.cui.actions.ActionType;
 
 public class Parser {
 
   public Action parse(String input) {
-    if(input.isEmpty() || input.charAt(0)!='/') return new Action(ActionType.UNKNOWN_COMMAND, null ,List.of(input));
+    if(input.isEmpty()) return new Action(ActionType.WHITESPACE, null, List.of());
+    if(input.charAt(0)!='/') return new Action(ActionType.UNKNOWN_COMMAND, null ,List.of(input));
     List<String> request = Arrays.stream(input.split("\\s")).toList();
     return getAction(request);
   }
@@ -36,6 +40,7 @@ public class Parser {
   }
 
   private ActionType getActionTypeFromString(String action) {
+    if( action==null || action.isEmpty()) return ActionType.WHITESPACE;
     action = action.substring(1);
     return switch (action) {
       case "quit", "q" -> ActionType.QUIT;
