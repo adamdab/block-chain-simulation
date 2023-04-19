@@ -44,6 +44,7 @@ public class Environment {
   public void execute(Action action) {
     switch (action.getAction()) {
       case QUIT -> quit = true;
+      case CLEAR -> clear();
       case HELP -> help();
       case WHITESPACE -> Console.print("");
       case UNKNOWN_COMMAND -> unknownCommand(action);
@@ -259,6 +260,9 @@ public class Environment {
             
           QUIT : /quit or /q
             DESC : closes the application
+            
+          CLEAR : /clear or /c
+            DESC : clear the console
           
           TRANSACTION : /transaction or /t
             FLAGS :
@@ -305,6 +309,13 @@ public class Environment {
               DESC : get long description of block in blockchain
                      if no index is specified it returns list of all transactions
         """);
+  }
+
+  private void clear(){
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
+    Console.showTitle();
+    Console.beginning();
   }
 
   private void simulateLatency(String message, long latency, int counter) {
