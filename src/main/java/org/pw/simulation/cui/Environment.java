@@ -221,8 +221,8 @@ public class Environment {
   }
 
   private void getLongListOfBlocks(Action action) {
+    try {
     if(action.getArgs().isEmpty()) {
-      try {
         for(int i=0;i<client.getChain().size(); i++) {
           Block block = client.getChain().get(i);
           Console.printLine(
@@ -230,9 +230,16 @@ public class Environment {
                   + block.getTimeStamp() + ",\nnonce : " + block.getNonce() + ",\nprev hash : "
                   + block.getPreviousHash() + "\nhash : " + block.getHash() + " }");
         }
-      } catch (Exception e) {
+      } else {
+          int index = Integer.parseInt(action.getArgs().get(0));
+          Block block = client.getChain().get(index);
+          Console.printLine(
+              index + ". {Transaction : " + block.getTransaction().toString() + ",\nmined at : "
+                  + block.getTimeStamp() + ",\nnonce : " + block.getNonce() + ",\nprev hash : "
+                  + block.getPreviousHash() + "\nhash : " + block.getHash() + " }");
+        }
+      }  catch (Exception e) {
         Console.printLine("Incorrect arguments, use [block_index]");
-      }
     }
   }
 
