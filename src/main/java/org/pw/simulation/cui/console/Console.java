@@ -1,5 +1,6 @@
 package org.pw.simulation.cui.console;
 
+import java.util.List;
 import java.util.Scanner;
 
 public final class Console {
@@ -12,7 +13,7 @@ public final class Console {
 
   public static void showTitle() {
     System.out.println(
-        ConsoleColors.PURPLE_BOLD_BRIGHT +
+        ConsoleColors.PURPLE_BRIGHT +
         """
                ___   __           __         __         _              _              __       __           \s
               / _ ) / /___  ____ / /__ ____ / /  ___ _ (_)___    ___  (_)__ _  __ __ / /___ _ / /_ ___   ____
@@ -22,9 +23,9 @@ public final class Console {
     + ConsoleColors.RESET);
   }
 
-  public static void beginning() {
+  public static void note() {
                       ///____//_/ \___/\__//_/\_\ \__//_//_/\_,_//_//_//_/ /___//_//_/_/_/\_,_//_/ \_,_/ \__/ \___//_/
-    System.out.println(ConsoleColors.BLUE + "#################################################################################################");
+    System.out.println(ConsoleColors.BLUE_BRIGHT + "#################################################################################################");
     System.out.println("#                               Blockchain simulation project                                   #");
     System.out.println("#                              Warsaw University of Technology                                  #");
     System.out.println("#                        Faculty of Mathematics and Information Sciences                        #");
@@ -32,6 +33,9 @@ public final class Console {
     System.out.println("#################################################################################################");
     System.out.println(ConsoleColors.RESET);
     System.out.println();
+  }
+
+  public static void beginning() {
     System.out.println(ConsoleColors.CYAN_BOLD +"-------------------------type /q or /quit to exit /h or /help for help---------------------------" + ConsoleColors.RESET);
     System.out.println();
     System.out.println();
@@ -61,6 +65,15 @@ public final class Console {
     System.out.println("["+ConsoleColors.RED_BRIGHT+"FATAL ERROR"+ConsoleColors.RESET+ "] "+message);
   }
 
+  public static void printJSON(List<String> fields, List<Object> values) {
+    if(fields.size()!=values.size()) return;
+    System.out.println(" {");
+    for (int i=0; i< fields.size(); i++) {
+      System.out.println(
+          ConsoleColors.CYAN + fields.get(i) +" : " + ConsoleColors.RESET + values.get(i) + ",");
+    }
+    System.out.println(" }");
+  }
 
   public String scan() {
     return scanner.next();

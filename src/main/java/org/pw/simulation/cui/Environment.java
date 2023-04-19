@@ -24,6 +24,7 @@ public class Environment {
 
   public Environment() {
     Console.showTitle();
+    Console.note();
     Console.beginning();
     miner = new Miner(new ArrayList<>(), "INIT");
     console = new Console();
@@ -138,23 +139,24 @@ public class Environment {
   private void getLongListOfTransactions(Action action) {
     if (action.getArgs().size() == 0) {
       for (int i = 0; i < allTransactions.size(); i++) {
-        Console.printLine(i + ". " + getLongDescription(allTransactions.get(i)));
+        Transaction transaction = allTransactions.get(i);
+        Console.printJSON(List.of("index", "from", "to", "amount", "timestamp", "signature"),
+            List.of(i, transaction.getFrom(), transaction.getTo(),
+                transaction.getAmount() + " euro-sponges", transaction.getTimestamp(),
+                transaction.getSignature()));
       }
     } else {
       try {
         int index = Integer.parseInt(action.getArgs().get(0));
         Transaction transaction = allTransactions.get(index);
-        Console.printLine(getLongDescription(transaction));
+        Console.printJSON(List.of("index", "from", "to", "amount", "timestamp", "signature"),
+            List.of(index, transaction.getFrom(), transaction.getTo(),
+                transaction.getAmount() + " euro-sponges", transaction.getTimestamp(),
+                transaction.getSignature()));
       } catch (Exception e) {
         Console.error("Incorrect arguments, use [] or [index]");
       }
     }
-  }
-
-  private  String getLongDescription(Transaction transaction) {
-    return "{\nfrom: " + transaction.getFrom() + ",\nto: " + transaction.getTo() + ",\namount: "
-        + transaction.getAmount() + " euro-sponges,\ntimestamp: " + transaction.getTimestamp()
-        + ",\nsignature: " + new String(transaction.getSignature(), StandardCharsets.UTF_8) + "\n}";
   }
 
   private void invokeBlockAction(Action action) {
@@ -226,18 +228,17 @@ public class Environment {
     if(action.getArgs().isEmpty()) {
         for(int i=0;i<client.getChain().size(); i++) {
           Block block = client.getChain().get(i);
-          Console.printLine(
-              i + ". {Transaction : " + block.getTransaction().toString() + ",\nmined at : "
-                  + block.getTimeStamp() + ",\nnonce : " + block.getNonce() + ",\nprev hash : "
-                  + block.getPreviousHash() + "\nhash : " + block.getHash() + " }");
+          Console.printJSON(
+              List.of("index", "transaction", "mined at", "nonce", "prev hash", "hash"),
+              List.of(i, block.getTransaction().toString(), block.getTimeStamp(), block.getNonce(),
+                  block.getPreviousHash(), block.getHash()));
         }
       } else {
           int index = Integer.parseInt(action.getArgs().get(0));
           Block block = client.getChain().get(index);
-          Console.printLine(
-              index + ". {Transaction : " + block.getTransaction().toString() + ",\nmined at : "
-                  + block.getTimeStamp() + ",\nnonce : " + block.getNonce() + ",\nprev hash : "
-                  + block.getPreviousHash() + "\nhash : " + block.getHash() + " }");
+          Console.printJSON(List.of("index","transaction","mined at","nonce","prev hash","hash"),
+              List.of(index, block.getTransaction().toString(), block.getTimeStamp(), block.getNonce(),
+                  block.getPreviousHash(), block.getHash()));
         }
       }  catch (Exception e) {
         Console.error("Incorrect arguments, use [block_index]");
