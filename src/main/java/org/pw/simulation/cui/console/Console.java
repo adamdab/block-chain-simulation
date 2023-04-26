@@ -23,20 +23,14 @@ public final class Console {
     + ConsoleColors.RESET);
   }
 
-  public static void note() {
-                      ///____//_/ \___/\__//_/\_\ \__//_//_/\_,_//_//_//_/ /___//_//_/_/_/\_,_//_/ \_,_/ \__/ \___//_/
-    System.out.println(ConsoleColors.BLUE_BRIGHT + "#################################################################################################");
-    System.out.println("#                               Blockchain simulation project                                   #");
-    System.out.println("#                              Warsaw University of Technology                                  #");
-    System.out.println("#                        Faculty of Mathematics and Information Sciences                        #");
-    System.out.println("#                            Project from the subject cyber-security                            #");
-    System.out.println("#################################################################################################");
+  public static void note(String message) {
+    System.out.println(ConsoleColors.BLUE_BRIGHT + message);
     System.out.println(ConsoleColors.RESET);
     System.out.println();
   }
 
-  public static void beginning() {
-    System.out.println(ConsoleColors.CYAN_BOLD +"-------------------------type /q or /quit to exit /h or /help for help---------------------------" + ConsoleColors.RESET);
+  public static void beginning(String message) {
+    System.out.println(ConsoleColors.CYAN_BOLD+ message + ConsoleColors.RESET);
     System.out.println();
     System.out.println();
   }

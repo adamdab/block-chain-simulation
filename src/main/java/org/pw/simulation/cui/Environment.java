@@ -4,6 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.pw.simulation.cui.languages.TextProvider;
+import org.pw.simulation.cui.languages.en.EnglishTextProvider;
+import org.pw.simulation.cui.languages.pl.PolishTextProvider;
 import org.pw.simulation.network.clients.Client;
 import org.pw.simulation.cui.actions.Action;
 import org.pw.simulation.cui.console.Console;
@@ -19,18 +22,22 @@ public class Environment {
   private final Console console;
   private final Parser parser;
   private final List<Transaction> allTransactions;
+  private TextProvider textProvider;
   private boolean quit;
 
 
   public Environment() {
     Console.showTitle();
-    Console.note();
-    Console.beginning();
     miner = new Miner(new ArrayList<>(), "INIT");
     console = new Console();
     parser = new Parser();
     allTransactions = new ArrayList<>();
-    String username = console.askForInput("Client's name (You) : ");
+    String language = console.askForInput("Language PL or EN : ");
+    if(language.toLowerCase().equals("en")) textProvider = new EnglishTextProvider();
+    else textProvider = new PolishTextProvider();
+    Console.note(textProvider.note());
+    Console.beginning(textProvider.bar());
+    String username = console.askForInput(textProvider.askForClientsName());
     client = new Client(username, new ArrayList());
     quit = false;
   }
@@ -69,7 +76,7 @@ public class Environment {
   private void createInvalidTransaction(Action action) {
     List<String> args = action.getArgs();
     if(args.size()!=2) {
-      Console.error("Incorrect arguments, use : [to amount]");
+      Console.error(textProvider.incorrectArgumentsUsage(List.of("[to amount]")));
       return;
     }
     Long timestamp = new Date().getTime();
@@ -83,7 +90,7 @@ public class Environment {
         .signature(client.sign((new Date(123123123L)).toString().getBytes(StandardCharsets.UTF_8)))
         .build();
     allTransactions.add(transaction);
-    Console.info("Invalid transaction created successfully : " + transaction.toString());
+    Console.info(textProvider.invalidTransactionCreationSuccessful() + textProvider.transactionName(transaction));
   }
 
   private void validateTransaction(Action action) {
@@ -92,17 +99,17 @@ public class Environment {
       int index = Integer.parseInt(args.get(0));
       Transaction transaction = allTransactions.get(index);
       simulateLatency("Broadcasting",5L,120);
-      String validation = miner.validate(transaction, client.getPublicKey())? " is VALID" : " is INVALID";
-      Console.info("Transaction : " + transaction.toString() + validation);
+      String validation = textProvider.validation(miner.validate(transaction, client.getPublicKey()));
+      Console.info(textProvider.transactionName(transaction) + validation);
     } catch (Exception e) {
-      Console.error("Incorrect arguments, use : [index]");
+      Console.error(textProvider.incorrectArgumentsUsage(List.of("[index]")));
     }
   }
 
   private void createTransaction(Action action) {
     List<String> args = action.getArgs();
     if(args.size()!=2) {
-      Console.error("Incorrect arguments, use : [to amount]");
+      Console.error(textProvider.incorrectArgumentsUsage(List.of("[to amount]")));
       return;
     }
     Long timestamp = new Date().getTime();
@@ -116,7 +123,7 @@ public class Environment {
         .signature(client.sign(timestamp.toString().getBytes(StandardCharsets.UTF_8)))
         .build();
     allTransactions.add(transaction);
-    Console.info("Valid transaction created successfully : " + transaction.toString());
+    Console.info(textProvider.validTransactionCreationSuccessful() + textProvider.transactionName(transaction));
   }
 
   private void getShortListOfTransactions(Action action) {
@@ -129,9 +136,9 @@ public class Environment {
       try {
         int index = Integer.parseInt(action.getArgs().get(0));
         Transaction transaction = allTransactions.get(index);
-        Console.printLine(index+". " + client.getName() + " pays "+ transaction.getAmount() + " euro-sponges to "+ transaction.getTo());
+        Console.printLine(index+". " + textProvider.shortPaymentTransaction(transaction));
       } catch (Exception e) {
-        Console.error("Incorrect arguments, use [] or [index]");
+        Console.error(textProvider.incorrectArgumentsUsage(List.of("[]", "[index]")));
       }
     }
   }
@@ -154,7 +161,7 @@ public class Environment {
                 transaction.getAmount() + " euro-sponges", transaction.getTimestamp(),
                 transaction.getSignature()));
       } catch (Exception e) {
-        Console.error("Incorrect arguments, use [] or [index]");
+        Console.error(textProvider.incorrectArgumentsUsage(List.of("[]", "[index]")));
       }
     }
   }
@@ -181,42 +188,26 @@ public class Environment {
     try {
       int index = Integer.parseInt(action.getArgs().get(0));
       Transaction transaction = allTransactions.get(index);
-      Console.info("Validating transaction...");
+      Console.info(textProvider.validating());
       simulateLatency("Broadcasting",5L,120);
       boolean isValid = miner.validate(transaction, client.getPublicKey());
       if(!isValid) {
-        Console.error("Transaction is INVALID");
+        Console.error("Transaction " + textProvider.validation(false));
         return;
-      } else Console.info("Transaction is VALID");
-      Thread thread = new Thread(() -> {
-        char[] animation = {'|', '/','-','\\'};
-        int i =0;
-        try {
-          while(!Thread.currentThread().isInterrupted()) {
-            Console.print("Mining ... " + animation[i%4]);
-            i++;
-            Thread.sleep(5);
-          }
-        } catch (Exception ignored) {
-        }
-      });
-      thread.start();
+      } else Console.info("Transaction " + textProvider.validation(true));
       Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
-      thread.interrupt();
-      thread.join();
-      Console.print("Done !");
       if(invalidate) block.invalidateNonce();
-      Console.info("Validating block...");
+      Console.info(textProvider.validating());
       if(miner.validateBlock(block)) {
-        Console.info("Block : " + block.toString() + "is VALID");
+        Console.info(textProvider.blockName(block) + textProvider.validation(true));
         simulateLatency("Adding block",5L,80);
         client.addBlock(block);
       } else {
-        Console.warn("Block is INVALID");
+        Console.warn(textProvider.blockName(block) + textProvider.validation(false));
       }
 
     } catch (Exception e) {
-      Console.error("Incorrect arguments, use [transaction_index]");
+      Console.error(textProvider.incorrectArgumentsUsage(List.of("[transaction_index]")));
     }
   }
 
@@ -226,17 +217,16 @@ public class Environment {
       try {
        int index = Integer.parseInt(action.getArgs().get(0));
        Block block = client.getChain().get(index);
-        Console.printLine(index + ". Transaction : " + block.getTransaction().toString() + ", mined at : " + block.getTimeStamp());
+        Console.printLine(index + textProvider.shortBlockTransactionMined(block));
       } catch (Exception e) {
-        Console.error("Incorrect arguments, use [block_index]");
+        Console.error(textProvider.incorrectArgumentsUsage(List.of("[block_index]")));
       }
     } else {
       for(int i=0;i<client.getChain().size(); i++) {
         Block block = client.getChain().get(i);
-        Console.printLine(i + ". Transaction : " + block.getTransaction().toString() + ", mined at : " + block.getTimeStamp());
+        Console.printLine(i + textProvider.shortBlockTransactionMined(block));
       }
     }
-
   }
 
   private void getLongListOfBlocks(Action action) {
@@ -257,82 +247,24 @@ public class Environment {
                   block.getPreviousHash(), block.getHash()));
         }
       }  catch (Exception e) {
-        Console.error("Incorrect arguments, use [block_index]");
+        Console.error(textProvider.incorrectArgumentsUsage(List.of("[block_index]")));
     }
   }
 
 
   private void unknownCommand(Action action) {
-    Console.printLine("#---------------------------------#");
-    Console.printLine("| An unknown command has occurred |");
-    Console.printLine("| Please use /h or /help to see   |");
-    Console.printLine("| available commands              |");
-    Console.printLine("#---------------------------------#");
+    Console.printLine(textProvider.unknownCommand());
   }
 
   private void help() {
-    Console.printLine("""
-          HELP : /help or /h
-            DESC : returns list of commands that user can invoke
-            
-          QUIT : /quit or /q
-            DESC : closes the application
-            
-          CLEAR : /clear or /cls
-            DESC : clear the console
-          
-          TRANSACTION : /transaction or /t
-            FLAGS :
-             --create or -c
-              PARAMETERS : [to amount]
-              DESC : create valid transaction and add it to the transaction list
-              
-             --create-invalid or -ci
-              PARAMETERS : [to amount]
-              DESC: create invalid transaction and add it to the transaction list
-             
-             --list or -ls
-              PARAMETERS : [] or [transaction_index]
-              DESC : get short description of transaction that were created
-                     if no index is specified it returns list of all transactions
-                     
-             --list-all or -la
-              PARAMETERS : [] or [transaction_index]
-              DESC : get long description of transaction that were created
-                     if no index is specified it returns list of all transactions
-                     
-             --validate or -v
-              PARAMETERS : [transaction_index]
-              DESC : validates signature of transaction,
-                     this part is executing by miner before mining process
-                     
-          BLOCK : /block or /b
-            FLAGS :
-             --create or -c
-              PARAMETERS : [transaction_index]
-              DESC : create valid block and add it to the blockchain
-              
-             --create-invalid or -ci
-              PARAMETERS : [transaction_index]
-              DESC: create invalid block and add tries to add it to the blockchain
-             
-             --list or -ls
-              PARAMETERS : [] or [block_index]
-              DESC : get short description of block in blockchain
-                     if no index is specified it returns list of all transactions
-                     
-             --list-all or -la
-              PARAMETERS : [] or [block_index]
-              DESC : get long description of block in blockchain
-                     if no index is specified it returns list of all transactions
-        """);
+    Console.printLine(textProvider.help());
   }
 
   private void clear(){
     System.out.print("\033[H\033[2J");
     System.out.flush();
     Console.showTitle();
-    Console.beginning();
+    Console.beginning(textProvider.bar());
   }
 
   private void simulateLatency(String message, long latency, int counter) {
@@ -344,7 +276,7 @@ public class Environment {
       }
     } catch (Exception ignored) {
     }
-    Console.print(message + " ... Done !\n");
+    Console.print(message + " ... Zakończone !\n");
   }
 
 }
