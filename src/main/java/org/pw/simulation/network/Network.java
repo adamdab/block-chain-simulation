@@ -85,6 +85,8 @@ public class Network {
   }
 
   public void broadcastBlock(Block block) {
+    for(int i=0; i<miners.size(); i++) {
 
+    }
   }
 }
