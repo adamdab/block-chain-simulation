@@ -188,7 +188,23 @@ public class Environment {
         Console.error("Transaction is INVALID");
         return;
       } else Console.info("Transaction is VALID");
+      Thread thread = new Thread(() -> {
+        char[] animation = {'|', '/','-','\\'};
+        int i =0;
+        try {
+          while(!Thread.currentThread().isInterrupted()) {
+            Console.print("Mining ... " + animation[i%4]);
+            i++;
+            Thread.sleep(5);
+          }
+        } catch (Exception ignored) {
+        }
+      });
+      thread.start();
       Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
+      thread.interrupt();
+      thread.join();
+      Console.print("Done !");
       if(invalidate) block.invalidateNonce();
       Console.info("Validating block...");
       if(miner.validateBlock(block)) {
