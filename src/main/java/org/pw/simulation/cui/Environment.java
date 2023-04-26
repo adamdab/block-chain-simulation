@@ -193,9 +193,9 @@ public class Environment {
       simulateLatency("Broadcasting",5L,120);
       boolean isValid = miner.validate(transaction, client.getPublicKey());
       if(!isValid) {
-        Console.error("Transaction " + textProvider.validation(false));
+        Console.error(textProvider.transactionName(transaction) + " " + textProvider.validation(false));
         return;
-      } else Console.info("Transaction " + textProvider.validation(true));
+      } else Console.info(textProvider.transactionName(transaction) + " " + textProvider.validation(true));
       LoadingThread thread = new LoadingThread("Mining block");
       thread.start();
       Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
