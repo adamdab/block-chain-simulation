@@ -29,7 +29,7 @@ public class Client {
       KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
       pair = generator.generateKeyPair();
     } catch (NoSuchAlgorithmException e) {
-      System.out.println("[FATAL ERROR] Nie da się utworzyć kluczy dla tego użytkownika");
+      System.out.println("[FATAL ERROR] Can not create keys for this user");
     }
     keyPair = Optional.ofNullable(pair);
   }
@@ -49,7 +49,7 @@ public class Client {
       return cipher.doFinal(message);
     } catch (Exception e) {
       if( e instanceof NoSuchAlgorithmException) {
-        System.out.println("[FATAL ERROR] Nie da się utworzyć szyfru RSA");
+        System.out.println("[FATAL ERROR] Can not create RSA cipher");
         throw new RuntimeException("RSA algorithm is missing");
       } else throw new RuntimeException(e);
     }
