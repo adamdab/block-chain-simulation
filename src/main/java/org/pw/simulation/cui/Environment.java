@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.pw.simulation.cui.console.LoadingThread;
 import org.pw.simulation.cui.languages.TextProvider;
 import org.pw.simulation.cui.languages.en.EnglishTextProvider;
 import org.pw.simulation.cui.languages.pl.PolishTextProvider;
@@ -195,7 +196,11 @@ public class Environment {
         Console.error("Transaction " + textProvider.validation(false));
         return;
       } else Console.info("Transaction " + textProvider.validation(true));
+      LoadingThread thread = new LoadingThread("Mining block");
+      thread.start();
       Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
+      thread.interrupt();
+      thread.join();
       if(invalidate) block.invalidateNonce();
       Console.info(textProvider.validating());
       if(miner.validateBlock(block)) {
