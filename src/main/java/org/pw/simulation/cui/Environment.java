@@ -4,13 +4,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.pw.simulation.clients.Client;
+import org.pw.simulation.network.clients.Client;
 import org.pw.simulation.cui.actions.Action;
 import org.pw.simulation.cui.console.Console;
 import org.pw.simulation.entity.Block;
 import org.pw.simulation.entity.Transaction;
 import org.pw.simulation.entity.TransactionType;
-import org.pw.simulation.miners.Miner;
+import org.pw.simulation.network.miners.Miner;
 
 public class Environment {
 

@@ -1,4 +1,4 @@
-package org.pw.simulation.miners;
+package org.pw.simulation.network.miners;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -54,6 +54,7 @@ public class Miner {
         .previousHash(prevHash)
         .build();
     prevHash = hash;
+    this.chain.add(block);
     return block;
   }
 
