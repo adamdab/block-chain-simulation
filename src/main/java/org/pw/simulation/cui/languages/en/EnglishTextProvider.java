@@ -55,7 +55,7 @@ public class EnglishTextProvider implements TextProvider {
 
   @Override
   public String shortBlockTransactionMined(Block block) {
-    return ". Transaction : " + block.getTransaction().toString() + ", mined at : " + block.getTimeStamp();
+    return transactionName(block.getTransaction()) + ", mined at : " + block.getTimeStamp();
   }
 
   @Override

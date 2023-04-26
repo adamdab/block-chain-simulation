@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.pw.simulation.cui.console.LoadingThread;
 import org.pw.simulation.cui.languages.TextProvider;
 import org.pw.simulation.cui.languages.en.EnglishTextProvider;
 import org.pw.simulation.cui.languages.pl.PolishTextProvider;
@@ -22,7 +23,7 @@ public class Environment {
   private final Console console;
   private final Parser parser;
   private final List<Transaction> allTransactions;
-  private TextProvider textProvider;
+  private final TextProvider textProvider;
   private boolean quit;
 
 
@@ -192,10 +193,14 @@ public class Environment {
       simulateLatency("Broadcasting",5L,120);
       boolean isValid = miner.validate(transaction, client.getPublicKey());
       if(!isValid) {
-        Console.error("Transaction " + textProvider.validation(false));
+        Console.error(textProvider.transactionName(transaction) + " " + textProvider.validation(false));
         return;
-      } else Console.info("Transaction " + textProvider.validation(true));
+      } else Console.info(textProvider.transactionName(transaction) + " " + textProvider.validation(true));
+      LoadingThread thread = new LoadingThread("Mining block");
+      thread.start();
       Block block = miner.mineBlock(new Date().getTime(), transaction, 4);
+      thread.interrupt();
+      thread.join();
       if(invalidate) block.invalidateNonce();
       Console.info(textProvider.validating());
       if(miner.validateBlock(block)) {
@@ -217,14 +222,14 @@ public class Environment {
       try {
        int index = Integer.parseInt(action.getArgs().get(0));
        Block block = client.getChain().get(index);
-        Console.printLine(index + textProvider.shortBlockTransactionMined(block));
+        Console.printLine(index + ". " + textProvider.shortBlockTransactionMined(block));
       } catch (Exception e) {
         Console.error(textProvider.incorrectArgumentsUsage(List.of("[block_index]")));
       }
     } else {
       for(int i=0;i<client.getChain().size(); i++) {
         Block block = client.getChain().get(i);
-        Console.printLine(i + textProvider.shortBlockTransactionMined(block));
+        Console.printLine(i + ". " + textProvider.shortBlockTransactionMined(block));
       }
     }
   }
@@ -276,7 +281,7 @@ public class Environment {
       }
     } catch (Exception ignored) {
     }
-    Console.print(message + " ... Zakończone !\n");
+    Console.print(message + textProvider.endOfProcess()+"\n");
   }
 
 }
