@@ -55,7 +55,7 @@ public class PolishTextProvider implements TextProvider {
 
   @Override
   public String shortBlockTransactionMined(Block block) {
-    return ". Transakcja : " + block.getTransaction().toString() + ", wykopana o : " + block.getTimeStamp();
+    return transactionName(block.getTransaction()) + ", wykopana o : " + block.getTimeStamp();
   }
 
   @Override

@@ -17,7 +17,7 @@ public class LoadingThread extends Thread{
       while (!Thread.currentThread().isInterrupted()) {
         Console.print(loadingMessage+"..."+animation[i]);
         i = (i+1)%4;
-        Thread.sleep(15);
+        Thread.sleep(25);
       }
     } catch (Exception ignore) {}
   }

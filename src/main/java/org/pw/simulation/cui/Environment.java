@@ -23,7 +23,7 @@ public class Environment {
   private final Console console;
   private final Parser parser;
   private final List<Transaction> allTransactions;
-  private TextProvider textProvider;
+  private final TextProvider textProvider;
   private boolean quit;
 
 
@@ -222,14 +222,14 @@ public class Environment {
       try {
        int index = Integer.parseInt(action.getArgs().get(0));
        Block block = client.getChain().get(index);
-        Console.printLine(index + textProvider.shortBlockTransactionMined(block));
+        Console.printLine(index + ". " + textProvider.shortBlockTransactionMined(block));
       } catch (Exception e) {
         Console.error(textProvider.incorrectArgumentsUsage(List.of("[block_index]")));
       }
     } else {
       for(int i=0;i<client.getChain().size(); i++) {
         Block block = client.getChain().get(i);
-        Console.printLine(i + textProvider.shortBlockTransactionMined(block));
+        Console.printLine(i + ". " + textProvider.shortBlockTransactionMined(block));
       }
     }
   }
@@ -281,7 +281,7 @@ public class Environment {
       }
     } catch (Exception ignored) {
     }
-    Console.print(message + " ... Zakończone !\n");
+    Console.print(message + textProvider.endOfProcess()+"\n");
   }
 
 }
