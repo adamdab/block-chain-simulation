@@ -35,6 +35,7 @@ public class Parser {
       case "--list-all", "-la" -> ActionSubType.LIST_LONG;
       case "--validate", "-v" -> ActionSubType.VALIDATE;
       case "--create-invalid", "-ci" -> ActionSubType.CREATE_INVALID;
+      case "--switch", "-s" -> ActionSubType.SWITCH_CLIENT;
       default -> ActionSubType.BAD_REQUEST;
     };
   }
@@ -48,6 +49,8 @@ public class Parser {
       case "help", "h" -> ActionType.HELP;
       case "block", "b" -> ActionType.BLOCK_ACTION;
       case "transaction", "t" -> ActionType.TRANSACTION_ACTION;
+      case "miner", "m" -> ActionType.MINER;
+      case "client", "c" -> ActionType.CLIENT;
 
       default -> ActionType.UNKNOWN_COMMAND;
     };

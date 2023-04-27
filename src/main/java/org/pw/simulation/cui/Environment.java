@@ -51,12 +51,45 @@ public class Environment {
       case QUIT -> quit = true;
       case CLEAR -> clear();
       case HELP -> help();
+      case MINER -> addMiner();
+      case CLIENT -> clientAction(action);
       case WHITESPACE -> Console.print("");
       case UNKNOWN_COMMAND -> unknownCommand(action);
       case BLOCK_ACTION -> invokeBlockAction(action);
       case TRANSACTION_ACTION -> invokeTransactionAction(action);
       }
     }
+
+  private void clientAction(Action action) {
+    switch (action.getSubType()) {
+      case CREATE -> createClient(action);
+      case SWITCH_CLIENT -> switchClient(action);
+
+      default -> unknownCommand(action);
+    }
+  }
+
+  private void switchClient(Action action) {
+    List<String> args = action.getArgs();
+    if(args.size() != 1) {
+      unknownCommand(action);
+    } else {
+      network.changeClient(args.get(0));
+    }
+  }
+
+  private void createClient(Action action) {
+    List<String> args = action.getArgs();
+    if(args.size() != 1) {
+      unknownCommand(action);
+    } else {
+      network.addClient(args.get(0));
+    }
+  }
+
+  private void addMiner() {
+    network.addMiner();
+  }
 
   private void invokeTransactionAction(Action action) {
     switch (action.getSubType()) {

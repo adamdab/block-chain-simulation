@@ -7,5 +7,6 @@ public enum ActionSubType {
   DETAILS,
   BAD_REQUEST,
   VALIDATE,
-  CREATE_INVALID
+  CREATE_INVALID,
+  SWITCH_CLIENT
 }

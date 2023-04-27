@@ -55,7 +55,6 @@ public class Network {
 
   public void mineBlock(Transaction transaction) {
     // validate
-
     LoadingThread validatingThread = new LoadingThread(textProvider.validating());
     validatingThread.start();
     List<Miner> acceptingMiners = new ArrayList<>();
@@ -87,6 +86,7 @@ public class Network {
     LoadingThread miningThread = new LoadingThread("Mining");
     miningThread.start();
     long timestamp = new Date().getTime();
+    // TODO : Fix race condition for keys when delta in time is the same
     Map<Long, Block> minedBlocks = acceptingMiners.parallelStream()
         .map(miner -> miner.mineBlock(new Date().getTime(), transaction, 4))
         .collect(Collectors.toMap(block -> block.getTimeStamp() - timestamp, Function.identity()));
