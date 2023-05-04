@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.pw.simulation.network.clients.Client;
-import org.pw.simulation.entity.Block;
-import org.pw.simulation.entity.Transaction;
+import org.pw.simulation.network.entity.Block;
+import org.pw.simulation.network.entity.Transaction;
 import org.pw.simulation.network.miners.Miner;
 
 class MinerTest {

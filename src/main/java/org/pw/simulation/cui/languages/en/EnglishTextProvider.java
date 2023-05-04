@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.pw.simulation.cui.languages.TextProvider;
-import org.pw.simulation.entity.Block;
-import org.pw.simulation.entity.Transaction;
+import org.pw.simulation.network.entity.Block;
+import org.pw.simulation.network.entity.Transaction;
 
 public class EnglishTextProvider implements TextProvider {
 

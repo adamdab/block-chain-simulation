@@ -2,20 +2,17 @@ package org.pw.simulation.network;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import org.pw.simulation.cui.console.Console;
 import org.pw.simulation.cui.console.LoadingThread;
 import org.pw.simulation.cui.languages.TextProvider;
-import org.pw.simulation.entity.Block;
-import org.pw.simulation.entity.Transaction;
-import org.pw.simulation.entity.TransactionType;
+import org.pw.simulation.network.entity.Block;
+import org.pw.simulation.network.entity.BlockWrapper;
+import org.pw.simulation.network.entity.Transaction;
+import org.pw.simulation.network.entity.TransactionType;
 import org.pw.simulation.network.clients.Client;
 import org.pw.simulation.network.miners.Miner;
 
@@ -44,7 +41,7 @@ public class Network {
   }
 
   public void changeClient(String clientName) {
-    if(! clients.containsKey(clientName)) throw new ArrayStoreException();
+    if(! clients.containsKey(clientName)) throw new KeyAlreadyExistsException();
     currentClient = clientName;
   }
   public void addMiner() {
@@ -85,11 +82,16 @@ public class Network {
 
     LoadingThread miningThread = new LoadingThread("Mining");
     miningThread.start();
-    long timestamp = new Date().getTime();
-    // TODO : Fix race condition for keys when delta in time is the same
-    Map<Long, Block> minedBlocks = acceptingMiners.parallelStream()
-        .map(miner -> miner.mineBlock(new Date().getTime(), transaction, 4))
-        .collect(Collectors.toMap(block -> block.getTimeStamp() - timestamp, Function.identity()));
+    BlockWrapper wrappedBlock = acceptingMiners.parallelStream()
+        .map(miner -> {
+          Block minedBlock = miner.mineBlock(new Date().getTime(), transaction, 4);
+          return BlockWrapper.builder()
+              .author(miner)
+              .miningDate(new Date().getTime())
+              .block(minedBlock)
+              .build();
+        }).min((o1, o2) -> o1.getMiningDate() > o2.getMiningDate() ? 1 : 0)
+        .orElseThrow();
     miningThread.interrupt();
     try {
       miningThread.join();
@@ -100,14 +102,13 @@ public class Network {
 
     // choose the fastest miner and get his block
 
-    Block block = Collections.min(minedBlocks.entrySet(), Map.Entry.comparingByKey()).getValue();
-    Console.info(textProvider.blockName(block));
+    Console.info(textProvider.blockName(wrappedBlock.getBlock()));
 
     // broadcast to all clients
 
     Console.printLine("Broadcasting ...");
     for(Client client : clients.values()) {
-      client.getChain().add(block);
+      client.getChain().add(wrappedBlock.getBlock());
     }
     Console.printLine(textProvider.endOfProcess());
   }

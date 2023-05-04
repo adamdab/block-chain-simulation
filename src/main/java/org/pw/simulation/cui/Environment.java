@@ -4,15 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.management.openmbean.KeyAlreadyExistsException;
 import org.pw.simulation.cui.languages.TextProvider;
 import org.pw.simulation.cui.languages.en.EnglishTextProvider;
 import org.pw.simulation.cui.languages.pl.PolishTextProvider;
 import org.pw.simulation.network.Network;
 import org.pw.simulation.cui.actions.Action;
 import org.pw.simulation.cui.console.Console;
-import org.pw.simulation.entity.Block;
-import org.pw.simulation.entity.Transaction;
-import org.pw.simulation.entity.TransactionType;
+import org.pw.simulation.network.entity.Block;
+import org.pw.simulation.network.entity.Transaction;
+import org.pw.simulation.network.entity.TransactionType;
 
 public class Environment {
 
@@ -74,7 +75,11 @@ public class Environment {
     if(args.size() != 1) {
       unknownCommand(action);
     } else {
-      network.changeClient(args.get(0));
+      try {
+        network.changeClient(args.get(0));
+      } catch (Exception e) {
+        Console.printLine(textProvider.incorrectArgumentsUsage(List.of("[name]")));
+      }
     }
   }
 
@@ -83,7 +88,11 @@ public class Environment {
     if(args.size() != 1) {
       unknownCommand(action);
     } else {
-      network.addClient(args.get(0));
+      try {
+        network.addClient(args.get(0));
+      } catch (KeyAlreadyExistsException e) {
+        Console.printLine(textProvider.incorrectArgumentsUsage(List.of("[name]")));
+      }
     }
   }
 

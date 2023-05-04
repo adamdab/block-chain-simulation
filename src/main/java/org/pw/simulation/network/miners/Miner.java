@@ -9,8 +9,8 @@ import javax.crypto.Cipher;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.pw.simulation.cui.console.Console;
-import org.pw.simulation.entity.Block;
-import org.pw.simulation.entity.Transaction;
+import org.pw.simulation.network.entity.Block;
+import org.pw.simulation.network.entity.Transaction;
 
 @AllArgsConstructor
 @Getter

@@ -1,4 +1,4 @@
-package org.pw.simulation.entity;
+package org.pw.simulation.network.entity;
 
 import java.util.Date;
 import lombok.Builder;

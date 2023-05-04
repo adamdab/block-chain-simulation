@@ -11,7 +11,7 @@ import java.util.Optional;
 import javax.crypto.Cipher;
 import lombok.Getter;
 import org.pw.simulation.cui.console.Console;
-import org.pw.simulation.entity.Block;
+import org.pw.simulation.network.entity.Block;
 
 public class Client {
 
