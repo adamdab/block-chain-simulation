@@ -1,4 +1,4 @@
-package org.pw.simulation.entity;
+package org.pw.simulation.network.entity;
 
 public enum TransactionType {
   MINER_REWARD,

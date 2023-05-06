@@ -8,4 +8,6 @@ public enum ActionType {
   BLOCK_ACTION,
   TRANSACTION_ACTION,
   WHITESPACE,
+  CLIENT,
+  MINER,
 }

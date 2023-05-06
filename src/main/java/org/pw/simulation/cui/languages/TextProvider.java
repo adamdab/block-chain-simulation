@@ -1,8 +1,8 @@
 package org.pw.simulation.cui.languages;
 
 import java.util.List;
-import org.pw.simulation.entity.Block;
-import org.pw.simulation.entity.Transaction;
+import org.pw.simulation.network.entity.Block;
+import org.pw.simulation.network.entity.Transaction;
 
 public interface TextProvider {
   public String askForClientsName();
