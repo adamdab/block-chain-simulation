@@ -125,6 +125,21 @@ public class EnglishTextProvider implements TextProvider {
               PARAMETERS : [] or [block_index]
               DESC : get long description of block in blockchain
                      if no index is specified it returns list of all transactions
+
+          MINER : /miner or /m
+            FLAGS :
+              --create lub -c
+               DESC : creates and adds new miner to the network
+
+          CLIENT : /client or /c
+            FLAGS :
+              --create or -c
+               PARAMETERS : [name]
+               DESC : creates new client with specified name and adds it to the network
+
+              --switch or -s
+               PARAMETERS : [name]
+               DESC : switches to specified client from network
         """;
   }
 

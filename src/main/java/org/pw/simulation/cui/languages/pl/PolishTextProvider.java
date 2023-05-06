@@ -125,6 +125,21 @@ public class PolishTextProvider implements TextProvider {
               PARAMETRY : [] lub [indeks_bloku]
               OPIS : pobiera długi opis bloku w łańcuchu bloków
                      jeśli nie podano indeksu, zwraca listę wszystkich transakcji
+           
+          MINER : /miner lub /m
+            FLAGI :
+              --create lub -c
+               OPIS : tworzy i dodaje nowego minera do sieci
+
+          KLINET : /client lub /c
+            FLAGI :
+              --create lub -c
+               PARAMETRY : [nazwa]
+               OPIS : tworzy nowego kilenta o podanej nazwie i dodaje go do sieci
+            
+              --switch lub -s
+               PARAMETRY : [nazwa]
+               OPIS : przełącza na klienta w sieci o podanej nazwie
         """;
   }
 
