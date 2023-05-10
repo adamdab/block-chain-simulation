@@ -79,12 +79,12 @@ public class Network {
       Console.printLine(textProvider.endOfProcess());
       return;
     }
-
+    Long now = new Date().getTime();
     LoadingThread miningThread = new LoadingThread("Mining");
     miningThread.start();
     BlockWrapper wrappedBlock = acceptingMiners.parallelStream()
         .map(miner -> {
-          Block minedBlock = miner.mineBlock(new Date().getTime(), transaction, 4);
+          Block minedBlock = miner.mineBlock(now, transaction, 4);
           return BlockWrapper.builder()
               .author(miner)
               .miningDate(new Date().getTime())
