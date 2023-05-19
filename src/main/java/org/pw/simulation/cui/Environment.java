@@ -7,7 +7,6 @@ import java.util.List;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import org.pw.simulation.cui.languages.TextProvider;
 import org.pw.simulation.cui.languages.en.EnglishTextProvider;
-import org.pw.simulation.cui.languages.pl.BalickiTextProvider;
 import org.pw.simulation.cui.languages.pl.PolishTextProvider;
 import org.pw.simulation.network.Network;
 import org.pw.simulation.cui.actions.Action;
