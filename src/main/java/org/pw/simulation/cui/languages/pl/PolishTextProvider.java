@@ -173,4 +173,9 @@ public class PolishTextProvider implements TextProvider {
         new Date(block.getTimeStamp()).toString(), block.getHash(),
         block.getNonce(), block.getPreviousHash());
   }
+
+  @Override
+  public String askForInput(String username) {
+    return username+"> ";
+  }
 }

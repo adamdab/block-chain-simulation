@@ -20,4 +20,5 @@ public interface TextProvider {
   public String bar();
   public String transactionName(Transaction transaction);
   public String blockName(Block block);
+  public String askForInput(String username);
 }
