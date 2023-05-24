@@ -177,7 +177,7 @@ public class ENTextProvider implements TextProvider {
 
   @Override
   public String askForInput(String username) {
-    String GorgeProofing = ConsoleColors.RED_BRIGHT + """
+    String GorgeProofing = ConsoleColors.BLUE + """
         Add miner to network : /miner --create
         Create transaction : /transaction --create [word] [integer]
         List all transactions : /transaction --list-all

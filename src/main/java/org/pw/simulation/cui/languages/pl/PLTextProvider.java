@@ -177,7 +177,7 @@ public class PLTextProvider implements TextProvider {
 
   @Override
   public String askForInput(String username) {
-    String GorgeProofing = ConsoleColors.RED_BRIGHT + """
+    String GorgeProofing = ConsoleColors.BLUE + """
         Dodaj minera do sieci : /miner --create
         Stwórz transakcję : /transaction --create [słowo] [liczba naturalna]
         Wylistuj transakcje : /transaction --list-all
