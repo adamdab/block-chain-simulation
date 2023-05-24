@@ -7,6 +7,7 @@ import java.util.List;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import org.pw.simulation.cui.languages.TextProvider;
 import org.pw.simulation.cui.languages.en.ENTextProvider;
+import org.pw.simulation.cui.languages.pl.PLTextProvider;
 import org.pw.simulation.cui.languages.pl.PolishTextProvider;
 import org.pw.simulation.network.Network;
 import org.pw.simulation.cui.actions.Action;
@@ -32,7 +33,7 @@ public class Environment {
     allTransactions = new ArrayList<>();
     String language = console.askForInput("Language PL or EN : ");
     if(language.toLowerCase().equals("en")) textProvider = new ENTextProvider();
-    else textProvider = new PolishTextProvider();
+    else textProvider = new PLTextProvider();
     Console.note(textProvider.note());
     Console.beginning(textProvider.bar());
     String username = console.askForInput(textProvider.askForClientsName());
