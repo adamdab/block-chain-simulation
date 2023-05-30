@@ -188,4 +188,18 @@ public class ENTextProvider implements TextProvider {
         """ + ConsoleColors.RESET;
     return GorgeProofing + username+"> ";
   }
+
+  @Override
+  public String listClients(List<String> clientNames) {
+    StringBuilder result = new StringBuilder("""
+        Clients in network:     
+        """);
+    for(String clientName : clientNames) {
+      result.append(clientName).append("\n");
+    }
+    return result.toString();
+  }
+  public String listMiners(Integer count) {
+    return "Count of miners in network: " + count;
+  }
 }

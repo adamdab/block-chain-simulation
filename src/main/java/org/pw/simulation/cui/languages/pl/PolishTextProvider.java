@@ -178,4 +178,18 @@ public class PolishTextProvider implements TextProvider {
   public String askForInput(String username) {
     return username+"> ";
   }
+
+  @Override
+  public String listClients(List<String> clientNames) {
+    StringBuilder result = new StringBuilder("""
+        Klienci w sieci:   
+        """);
+    for(String clientName : clientNames) {
+      result.append(clientName).append("\n");
+    }
+    return result.toString();
+  }
+  public String listMiners(Integer count) {
+    return "Liczba minerów w sieci: "+count;
+  }
 }

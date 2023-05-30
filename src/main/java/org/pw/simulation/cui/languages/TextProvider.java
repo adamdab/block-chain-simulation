@@ -21,4 +21,6 @@ public interface TextProvider {
   public String transactionName(Transaction transaction);
   public String blockName(Block block);
   public String askForInput(String username);
+  public String listClients(List<String> clientNames);
+  public String listMiners(Integer count);
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import org.pw.simulation.cui.console.Console;
 import org.pw.simulation.cui.console.LoadingThread;
@@ -34,6 +35,10 @@ public class Network {
   public void addClient(String clientName) {
     if(clients.containsKey(clientName)) throw new KeyAlreadyExistsException();
     clients.put(clientName, new Client(clientName, clients.get(currentClient).getChain()));
+    Console.printLine(textProvider.listClients(clients.values()
+        .stream()
+        .map(Client::getName)
+        .collect(Collectors.toList())));
   }
 
   public Client getCurrentClient() {
@@ -46,6 +51,7 @@ public class Network {
   }
   public void addMiner() {
     miners.add(new Miner(miners.get(0).getChain(),miners.get(0).getPrevHash()));
+    Console.printLine(textProvider.listMiners(miners.size()));
   }
 
 
