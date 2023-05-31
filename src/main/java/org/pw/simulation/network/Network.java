@@ -50,7 +50,7 @@ public class Network {
     currentClient = clientName;
   }
   public void addMiner() {
-    miners.add(new Miner(miners.get(0).getChain(),miners.get(0).getPrevHash()));
+    miners.add(new Miner(new ArrayList<>(miners.get(0).getChain()),miners.get(0).getPrevHash()));
     Console.printLine(textProvider.listMiners(miners.size()));
   }
 
