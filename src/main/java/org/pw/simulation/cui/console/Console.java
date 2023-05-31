@@ -30,7 +30,7 @@ public final class Console {
   }
 
   public static void beginning(String message) {
-    System.out.println(ConsoleColors.CYAN_BOLD+ message + ConsoleColors.RESET);
+    System.out.println(ConsoleColors.RED+ message + ConsoleColors.RESET);
     System.out.println();
     System.out.println();
   }
