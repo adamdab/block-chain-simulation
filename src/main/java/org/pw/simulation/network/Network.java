@@ -34,7 +34,7 @@ public class Network {
 
   public void addClient(String clientName) {
     if(clients.containsKey(clientName)) throw new KeyAlreadyExistsException();
-    clients.put(clientName, new Client(clientName, clients.get(currentClient).getChain()));
+    clients.put(clientName, new Client(clientName, new ArrayList<>(clients.get(currentClient).getChain())));
     Console.printLine(textProvider.listClients(clients.values()
         .stream()
         .map(Client::getName)
